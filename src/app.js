@@ -9,6 +9,7 @@ import viewsRouter from './routes/views.router.js';
 
 import __dirname from '../dirname.js';
 import { errorHandler } from './middlewares/error.middlewares.js';
+import { getCategoriesMiddleware } from './middlewares/categories.middlewares.js';
 
 import cartsRouter from './routes/carts.router.js';
 
@@ -30,6 +31,14 @@ const PORT = process.env.PORT || 8080;
 // Inicializamos la conexión a MongoDB
 connectMongoDB();
 
+// 4b - Configuración del motor de plantillas Handlebars
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', __dirname + '/src/views');
+
+// 4c - Middleware para hacer las categorías disponibles en todas las vistas
+app.use(getCategoriesMiddleware);
+
 // 5 - Endpoint 
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartsRouter);
@@ -38,11 +47,6 @@ app.use('/', viewsRouter);
 // 6 - Middleware de manejo de errores
 /* Debe ser el ultimo pero antes del inicio del servidor */
 app.use(errorHandler);
-
-// 7 - Configuración del motor de plantillas Handlebars
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
-app.set('views', __dirname + '/src/views');
 
 app.listen(PORT, () => {
     console.log(`Servidor iniciado correctamente`);
