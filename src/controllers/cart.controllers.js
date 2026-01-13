@@ -1,4 +1,5 @@
 import CartModel from "../models/cart.model.js";
+import ProductModel from "../models/product.models.js";
 
 // 3 - Definimos un cart vacio
 export const createCart =  async (req, res) => {
@@ -22,14 +23,22 @@ export const addProductToCart = async (req, res) => {
         // VERIFICACIONES///
         ////////////////////
         // Verificamos que el producto exista
-        
+        const productExiste = await ProductModel.findById(pid);
+        if (!productExiste) return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });  
         
 
         // Verificamos que el carrito exista
-
+        const cartExiste = await CartModel.findById(cid);
+        if (!cartExiste) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
         
         // Verificamos si el producto ya existe en el carrito
             // Si existe, actualizamos la cantidad
+            const productInCart = cartExiste.products.find(item => item.product.toString() === pid);
+            if (productInCart) {
+                productInCart.quantity += quantity;
+                const updateCart = await CartModel.findByIdAndUpdate(cid, cartExiste, {new:true, runValidators:true});
+                return res.status(200).json({ status: 'success', payload: updateCart });
+            }
 
             // Si no existe, lo agregamos al carrito
             const updateCart = await CartModel.findByIdAndUpdate(cid, {$push:{products: {product:pid, quantity}}}, {new:true, runValidators:true});

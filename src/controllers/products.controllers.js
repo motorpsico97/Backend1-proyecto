@@ -4,16 +4,29 @@ import ProductModel from "../models/product.models.js";
 // 1 - Controlador para obtener todos los productos
 export const getProducts = async (req, res) => {
     try {
-
         const {limit = 8, page = 1} = req.query;
-
 
         // Obtenemos todos los productos "limpios" (lean) de metadatos e información extra que no necesitamos
         const productsData = await ProductModel.paginate({}, {limit, page, lean:true});
-        const products = productsData.docs;
-        delete productsData.docs;
-        // Enviamos la respuesta con los productos 
-        res.status(200).json({ status: 'success', payload: products, ...productsData });
+        
+        // Construimos los links de navegación
+        const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}`;
+        const prevLink = productsData.hasPrevPage ? `${baseUrl}?limit=${limit}&page=${productsData.prevPage}` : null;
+        const nextLink = productsData.hasNextPage ? `${baseUrl}?limit=${limit}&page=${productsData.nextPage}` : null;
+
+        // Enviamos la respuesta con el formato solicitado
+        res.status(200).json({ 
+            status: 'success',
+            payload: productsData.docs,
+            totalPages: productsData.totalPages,
+            prevPage: productsData.prevPage,
+            nextPage: productsData.nextPage,
+            page: productsData.page,
+            hasPrevPage: productsData.hasPrevPage,
+            hasNextPage: productsData.hasNextPage,
+            prevLink: prevLink,
+            nextLink: nextLink
+        });
     } catch (error) {
         res.status(500).json({ status: 'error', message: "Error al obtener los productos" });
     }
