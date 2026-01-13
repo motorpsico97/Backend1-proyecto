@@ -6,7 +6,7 @@ const viewsRouter = express.Router();
 
 viewsRouter.get('/', async (req, res) => {
     try {
-        const {limit = 10, page = 1, category} = req.query;
+        const {limit = 8, page = 1, category} = req.query;
         
         // Creamos el filtro para la consulta
         const filter = category ? { category } : {};
@@ -24,7 +24,21 @@ viewsRouter.get('/', async (req, res) => {
                 link: `?limit=${limit}&page=${index}${categoryParam}`
             });
         };
-        res.render('home', {products, links, selectedCategory: category})
+        
+        // Información de navegación
+        const pagination = {
+            hasPrevPage: productsData.hasPrevPage,
+            hasNextPage: productsData.hasNextPage,
+            prevPage: productsData.prevPage,
+            nextPage: productsData.nextPage,
+            currentPage: productsData.page,
+            totalPages: productsData.totalPages,
+            prevLink: productsData.hasPrevPage ? `?limit=${limit}&page=${productsData.prevPage}${categoryParam}` : null,
+            nextLink: productsData.hasNextPage ? `?limit=${limit}&page=${productsData.nextPage}${categoryParam}` : null,
+            firstLink: `?limit=${limit}&page=1${categoryParam}`
+        };
+        
+        res.render('home', {products, links, selectedCategory: category, pagination})
     
     } catch (error) {
         res.status(500).send({status: 'error', error: 'Error al cargar la vista'})

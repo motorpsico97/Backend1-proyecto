@@ -5,7 +5,7 @@ import ProductModel from "../models/product.models.js";
 export const getProducts = async (req, res) => {
     try {
 
-        const {limit = 10, page = 1} = req.query;
+        const {limit = 8, page = 1} = req.query;
 
 
         // Obtenemos todos los productos "limpios" (lean) de metadatos e información extra que no necesitamos
