@@ -1,47 +1,53 @@
-<div class="cart-page">
+<div class="pagina-carrito">
     <h1>Carrito de Compras</h1>
-    <p class="cart-id">ID del Carrito: {{cartId}}</p>
+    <p class="id-carrito">ID del Carrito: {{cartId}}</p>
     
     {{#if products.length}}
-        <div class="cart-products">
+        <div class="productos-carrito">
             {{#each products}}
                 {{#if this.product}}
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="/img/{{this.product.thumbnails}}" alt="{{this.product.title}}" onerror="this.src='/img/product.jpg'">
+                    <div class="item-carrito">
+                        <div class="imagen-item">
+                            <img src="/img/productos/{{product.thumbnails}}" alt="{{this.product.title}}">
                         </div>
-                        <div class="product-info">
+                        <div class="detalles-item">
                             <h3>{{this.product.title}}</h3>
-                            <p class="product-description">{{this.product.description}}</p>
-                            <p class="product-code">Código: {{this.product.code}}</p>
-                            <p class="product-category">Categoría: {{this.product.category}}</p>
+                            <p class="codigo-item">Código: {{this.product.code}}</p>
                         </div>
-                        <div class="product-pricing">
+                        <div class="precios-item">
                             <p>Precio unitario: <strong>${{this.product.price}}</strong></p>
                             <p>Cantidad: <strong>{{this.quantity}}</strong></p>
-                            <p class="subtotal">Subtotal: <strong>${{this.subtotal}}</strong></p>
+                            <p class="subtotal-item">Subtotal: <strong>${{this.subtotal}}</strong></p>
+                        </div>
+                        <div class="acciones-item">
+                            <form action="/cart/{{../cartId}}/product/{{this.product._id}}/delete" method="POST">
+                                <button type="submit" class="btn-eliminar-item">×</button>
+                            </form>
                         </div>
                     </div>
                 {{else}}
-                    <div class="product-card error">
+                    <div class="item-carrito error">
                         <p>Producto no disponible</p>
                     </div>
                 {{/if}}
             {{/each}}
         </div>
         
-        <div class="cart-total">
+        <div class="total-carrito">
             <h2>Total: ${{total}}</h2>
         </div>
         
-        <div class="cart-actions">
-            <a href="/" class="btn-continue">Continuar comprando</a>
-            <button class="btn-checkout">Finalizar compra</button>
+        <div class="acciones-carrito">
+            <a href="/" class="btn-continuar">Continuar comprando</a>
+            <form action="/cart/{{cartId}}/clear" method="POST" style="display: inline;">
+                <button type="submit" class="btn-vaciar-carrito">Vaciar carrito</button>
+            </form>
+            <button class="btn-finalizar">Finalizar compra</button>
         </div>
     {{else}}
-        <div class="empty-cart">
+        <div class="carrito-vacio">
             <p>El carrito está vacío</p>
-            <a href="/" class="btn-continue">Ir a comprar</a>
+            <a href="/" class="btn-continuar">Ir a comprar</a>
         </div>
     {{/if}}
 </div>

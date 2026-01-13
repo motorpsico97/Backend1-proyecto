@@ -1,48 +1,52 @@
-<div class="container">
-    <h1 class="main-title">Nuestros productos</h1>
+<div class="contenedor">
+    <h1 class="titulo-principal">Nuestros productos</h1>
     {{#if selectedCategory}}
-        <h2 class="category-subtitle">Categoría: {{selectedCategory}}</h2>
+        <h2 class="subtitulo-categoria">Categoría: {{selectedCategory}}</h2>
     {{/if}}
 
-    <div class="products-container">
+    <div class="contenedor-productos">
         {{#each products}}
-            <div class="product-card">
-                {{#if this.thumbnails}}
-                    <img src="/img/productos/{{this.thumbnails}}" alt="{{this.title}}" class="product-img">
-                {{else}}
-                    <img src="/img/product.jpg" alt="Imagen por defecto" class="product-img">
-                {{/if}}
-                <h2 class="product-name">{{this.title}}</h2>
-                <p class="product-price">${{this.price}}</p>
-                <p class="product-desc">{{this.description}}</p>
+            <div class="tarjeta-producto">
+                <a href="/product/{{this._id}}" class="enlace-producto">
+                    {{#if this.thumbnails}}
+                        <img src="/img/productos/{{this.thumbnails}}" alt="{{this.title}}" class="img-producto">
+                    {{else}}
+                        <img src="/img/product.jpg" alt="Imagen por defecto" class="img-producto">
+                    {{/if}}
+                    <h2 class="nombre-producto">{{this.title}}</h2>
+                    <p class="precio-producto">${{this.price}}</p>
+                    <p class="stock-producto">En stock: {{this.stock}}</p>
+                    <p class="desc-producto">{{this.description}}</p>
+                </a>
+                <button class="btn-agregar-carrito">Agregar al carrito</button>
             </div>
         {{/each}}
     </div>
 
-    <div class="pagination-container">
-        <div class="pagination-nav">
-            <a href="{{pagination.firstLink}}" class="nav-btn {{#unless pagination.hasPrevPage}}disabled{{/unless}}" {{#unless pagination.hasPrevPage}}aria-disabled="true"{{/unless}}>
+    <div class="contenedor-paginacion">
+        <div class="navegacion-paginacion">
+            <a href="{{pagination.firstLink}}" class="btn-navegacion {{#unless pagination.hasPrevPage}}deshabilitado{{/unless}}" {{#unless pagination.hasPrevPage}}aria-disabled="true"{{/unless}}>
                 ← Ir al inicio
             </a>
             
             {{#if pagination.hasPrevPage}}
-                <a href="{{pagination.prevLink}}" class="nav-btn">← Anterior</a>
+                <a href="{{pagination.prevLink}}" class="btn-navegacion">← Anterior</a>
             {{else}}
-                <span class="nav-btn disabled">← Anterior</span>
+                <span class="btn-navegacion deshabilitado">← Anterior</span>
             {{/if}}
             
-            <span class="page-info">Página {{pagination.currentPage}} de {{pagination.totalPages}}</span>
+            <span class="info-pagina">Página {{pagination.currentPage}} de {{pagination.totalPages}}</span>
             
             {{#if pagination.hasNextPage}}
-                <a href="{{pagination.nextLink}}" class="nav-btn">Siguiente →</a>
+                <a href="{{pagination.nextLink}}" class="btn-navegacion">Siguiente →</a>
             {{else}}
-                <span class="nav-btn disabled">Siguiente →</span>
+                <span class="btn-navegacion deshabilitado">Siguiente →</span>
             {{/if}}
         </div>
         
-        <div class="pagination-links">
+        <div class="enlaces-paginacion">
             {{#each links}}
-            <a href="{{this.link}}" class="page-link">{{this.text}}</a>
+            <a href="{{this.link}}" class="enlace-pagina">{{this.text}}</a>
             {{/each}}
         </div>
     </div>

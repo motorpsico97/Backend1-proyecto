@@ -19,6 +19,7 @@ dotenv.config({path: __dirname + '/.env'});
 // 2 - Creamos una instancia de express
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // 2b - Middleware para servir archivos estáticos
 app.use(express.static(__dirname + '/public'));

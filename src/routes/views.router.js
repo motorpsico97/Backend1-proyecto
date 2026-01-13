@@ -45,6 +45,26 @@ viewsRouter.get('/', async (req, res) => {
     }
 });
 
+// Ruta para visualizar un producto individual
+viewsRouter.get('/product/:pid', async (req, res) => {
+    try {
+        const { pid } = req.params;
+        
+        // Buscamos el producto por id
+        const product = await ProductModel.findById(pid).lean();
+        
+        // Verificamos si el producto existe
+        if (!product) {
+            return res.status(404).send({status: 'error', error: 'Producto no encontrado'});
+        }
+        
+        res.render('product-detail', { product });
+        
+    } catch (error) {
+        res.status(500).send({status: 'error', error: 'Error al cargar el producto'})
+    }
+});
+
 // 6 - Visualizar un carrito específico
 viewsRouter.get('/cart/:cid', async (req, res) => {
     try {
@@ -57,6 +77,7 @@ viewsRouter.get('/cart/:cid', async (req, res) => {
         if (!cart) {
             return res.status(404).send({status: 'error', error: 'Carrito no encontrado'});
         }
+
         
         // Calculamos el total del carrito
         let total = 0;
@@ -75,6 +96,48 @@ viewsRouter.get('/cart/:cid', async (req, res) => {
         
     } catch (error) {
         res.status(500).send({status: 'error', error: 'Error al cargar el carrito'})
+    }
+});
+
+// Ruta para eliminar un producto del carrito
+viewsRouter.post('/cart/:cid/product/:pid/delete', async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        
+        // Eliminamos el producto del carrito
+        await CartModel.findByIdAndUpdate(
+            cid,
+            { $pull: { products: { product: pid } } },
+            { new: true }
+        );
+        
+        // Redirigimos de vuelta al carrito
+        res.redirect(`/cart/${cid}`);
+        
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        res.redirect(`/cart/${req.params.cid}`);
+    }
+});
+
+// Ruta para vaciar el carrito
+viewsRouter.post('/cart/:cid/clear', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        
+        // Vaciamos el carrito
+        await CartModel.findByIdAndUpdate(
+            cid,
+            { products: [] },
+            { new: true }
+        );
+        
+        // Redirigimos de vuelta al carrito
+        res.redirect(`/cart/${cid}`);
+        
+    } catch (error) {
+        console.error('Error al vaciar carrito:', error);
+        res.redirect(`/cart/${req.params.cid}`);
     }
 });
 

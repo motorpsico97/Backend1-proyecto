@@ -1,0 +1,52 @@
+<div class="product-detail-container">
+    <div class="breadcrumb">
+        <a href="/">Inicio</a> / <a href="/?category={{product.category}}">{{product.category}}</a> / <span>{{product.title}}</span>
+    </div>
+    
+    <div class="product-detail">
+        <div class="product-detail-image">
+            {{#if product.thumbnails}}
+                <img src="/img/productos/{{product.thumbnails}}" alt="{{product.title}}" class="detail-img">
+            {{else}}
+                <img src="/img/product.jpg" alt="Imagen por defecto" class="detail-img">
+            {{/if}}
+        </div>
+        
+        <div class="product-detail-info">
+            <h1 class="detail-title">{{product.title}}</h1>
+            
+            <div class="detail-meta">
+                <span class="detail-category">{{product.category}}</span>
+                <span class="detail-code">Código: {{product.code}}</span>
+            </div>
+            
+            <div class="detail-price-section">
+                <p class="detail-price">${{product.price}}</p>
+                {{#if product.stock}}
+                    <p class="detail-stock in-stock">✓ En stock ({{product.stock}} disponibles)</p>
+                {{else}}
+                    <p class="detail-stock out-stock">✗ Sin stock</p>
+                {{/if}}
+            </div>
+            
+            <div class="detail-description">
+                <h3>Descripción</h3>
+                <p>{{product.description}}</p>
+            </div>
+            
+            <div class="detail-actions">
+                {{#if product.stock}}
+                    <button class="btn-add-to-cart">Agregar al carrito</button>
+                {{else}}
+                    <button class="btn-add-to-cart" disabled>Sin stock</button>
+                {{/if}}
+                <a href="/" class="btn-back">← Volver a productos</a>
+            </div>
+            
+            <div class="detail-additional">
+                <p><strong>Estado:</strong> {{#if product.status}}Activo{{else}}Inactivo{{/if}}</p>
+                <p><strong>Categoría:</strong> {{product.category}}</p>
+            </div>
+        </div>
+    </div>
+</div>
